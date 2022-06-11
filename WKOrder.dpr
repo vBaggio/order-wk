@@ -18,13 +18,17 @@ uses
   uBaseDAO in 'DAO\uBaseDAO.pas',
   uPedidoController in 'Controllers\uPedidoController.pas',
   uPedidoDAO in 'DAO\uPedidoDAO.pas',
-  uMainController in 'Controllers\uMainController.pas';
+  uMainController in 'Controllers\uMainController.pas',
+  uVerificarTabelas in 'DAO\uVerificarTabelas.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+
+  TVerificarTabelas.VerificarTabelas;
+
   Application.CreateForm(TfrmMain, frmMain);
   Application.Run;
 end.

@@ -9,7 +9,7 @@ uses
   FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.MySQL,
   FireDAC.Phys.MySQLDef, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
-  uMainController;
+  uMainController, uVerificarTabelas;
 
 type
   TfrmMain = class(TForm)
@@ -18,6 +18,7 @@ type
     btnRemove: TButton;
     stgPedidos: TStringGrid;
     btnEdit: TButton;
+    FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink;
     procedure btnNewClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -25,6 +26,7 @@ type
     procedure btnRemoveClick(Sender: TObject);
   private
     FController: TMainController;
+    FVerifTab: TVerificarTabelas;
     procedure AtualizarGrid;
   public
     { Public declarations }

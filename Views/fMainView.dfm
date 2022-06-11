@@ -69,4 +69,8 @@ object frmMain: TfrmMain
     ScrollBars = ssVertical
     TabOrder = 1
   end
+  object FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink
+    Left = 536
+    Top = 232
+  end
 end
