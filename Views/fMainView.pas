@@ -61,8 +61,13 @@ begin
 end;
 
 procedure TfrmMain.btnEditClick(Sender: TObject);
+var id: integer;
 begin
-  call_frmPedido(strToInt(stgPedidos.Cells[0, stgPedidos.Row]));
+  id := strToIntDef(stgPedidos.Cells[0, stgPedidos.Row], 0);
+  if not (id > 0) then
+    Exit;
+
+  call_frmPedido(id);
   AtualizarGrid;
 end;
 
@@ -75,10 +80,15 @@ end;
 procedure TfrmMain.btnRemoveClick(Sender: TObject);
 var
   msg: string;
+  var id: integer;
 begin
+  id := strToIntDef(stgPedidos.Cells[0, stgPedidos.Row], 0);
+  if not (id > 0) then
+    Exit;
+
   if MessageDlg('Deseja Excluir o pedido ' + stgPedidos.Cells[0, stgPedidos.Row] + ' ?' , mtConfirmation, [mbOK, mbCancel], 0) = mrOk then
 
-  if not FController.Delete(strToInt(stgPedidos.Cells[0, stgPedidos.Row]), msg) then
+  if not FController.Delete(id, msg) then
     ShowMessage(msg)
   else
     AtualizarGrid;

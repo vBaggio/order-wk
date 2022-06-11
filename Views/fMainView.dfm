@@ -23,7 +23,6 @@ object frmMain: TfrmMain
     Height = 67
     Align = alBottom
     TabOrder = 0
-    ExplicitTop = 582
     DesignSize = (
       725
       67)
@@ -69,6 +68,5 @@ object frmMain: TfrmMain
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goFixedRowDefAlign]
     ScrollBars = ssVertical
     TabOrder = 1
-    ExplicitHeight = 586
   end
 end

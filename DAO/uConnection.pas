@@ -32,6 +32,7 @@ implementation
 { TConexao }
 
 procedure TMyConnection.SetupConnection;
+var filepath: string;
 begin
     FConn.Connected := False;
 
