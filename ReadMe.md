@@ -6,5 +6,5 @@ Projeto desenvolvido durante a participação do processo seletivo da empresa [W
 - MySQL Server Community Edition.
 
 ## Instalação
-Basta preencher as informações da conexão com o banco de dados no arquivo **WKOder.ini**, é necessário informar um schema vazio.
-Dependendo da versão do mysql, pode ocorrer incompatibilidade com a dll na past bin, nesse caso basta substituir.
+Basta preencher as informações da conexão com o banco de dados no arquivo **WKOder.ini** no diretório bin, é necessário informar um schema vazio.
+Dependendo da versão do mysql, pode ocorrer incompatibilidade com a **libmySQL.dll** , nesse caso basta substituir.
