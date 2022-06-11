@@ -23,7 +23,7 @@ type TPedido = class
 
     procedure AddItem(AItem: TPedidoItem);
     function RemoverItem(ASeq: integer): boolean;
-
+    function UpdateItem(ASeq: integer; AQtde, AVlr: double): boolean;
 
 
     constructor Create(AId : integer = 0);
@@ -83,6 +83,23 @@ var i: integer;
 begin
   FItens.Delete(ASeq-1);
   recalcSeq;
+end;
+
+function TPedido.UpdateItem(ASeq: integer; AQtde, AVlr: double): boolean;
+begin
+  Result := False;
+
+  if ASeq <= 0 then
+    Exit;
+
+  if ASeq > FItens.Count then
+    Exit;
+
+  FItens[ASeq-1].Quantidade := AQtde;
+  FItens[ASeq-1].Unitario   := AVlr;
+
+  Result := True;
+
 end;
 
 end.

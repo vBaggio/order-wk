@@ -17,7 +17,8 @@ uses
   uClienteDao in 'DAO\uClienteDao.pas',
   uBaseDAO in 'DAO\uBaseDAO.pas',
   uPedidoController in 'Controllers\uPedidoController.pas',
-  uPedidoDAO in 'DAO\uPedidoDAO.pas';
+  uPedidoDAO in 'DAO\uPedidoDAO.pas',
+  uMainController in 'Controllers\uMainController.pas';
 
 {$R *.res}
 

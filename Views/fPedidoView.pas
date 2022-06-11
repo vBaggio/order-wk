@@ -9,10 +9,12 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.StdCtrls, Vcl.ExtCtrls,
   Vcl.Mask, Vcl.DBCtrls, Vcl.Buttons, Vcl.ComCtrls,
-
+  TypInfo,
   uPedidoController, uProduto;
 
 type
+  TModoTela = (modoInserir, modoEditar, modoLimpar);
+
   TfrmPedido = class(TForm)
     pnlFooter: TPanel;
     btnGravar: TButton;
@@ -23,11 +25,10 @@ type
     Label6: TLabel;
     btnGravarItem: TButton;
     Label2: TLabel;
-    btnCancel: TButton;
     edtNomeCli: TEdit;
     Label7: TLabel;
     edtIdCli: TEdit;
-    SpeedButton1: TSpeedButton;
+    btnIdCli: TSpeedButton;
     btnIdProd: TSpeedButton;
     edtTotalItem: TMaskEdit;
     edtUnit: TMaskEdit;
@@ -49,8 +50,10 @@ type
     mtbItensVlrUn: TFloatField;
     mtbItensTotalItem: TFloatField;
     btnCancelItem: TButton;
-    procedure SpeedButton1Click(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
+    pnlControls: TPanel;
+    pnlButtons: TPanel;
+    btnCancel: TButton;
+    procedure btnIdCliClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure edtIdCliExit(Sender: TObject);
     procedure edtEmisExit(Sender: TObject);
@@ -67,13 +70,20 @@ type
     procedure edtQtdeChange(Sender: TObject);
     procedure btnCancelItemClick(Sender: TObject);
     procedure btnGravarItemClick(Sender: TObject);
+    procedure btnGravarClick(Sender: TObject);
   private
     FController: TPedidoController;
+    Gravado: boolean;
+    Editando :integer;
+
+    ModoTela: TModoTela;
 
     procedure LimparEditsProd;
+    procedure ProcessarModo;
     procedure AtualizarTela;
 
     procedure AdicionarItem;
+    procedure AlterarItem;
     procedure AtualizarItem;
     procedure DeletarItem;
 
@@ -82,8 +92,10 @@ type
   end;
 
 var
+
+
   frmPedido: TfrmPedido;
-  procedure call_frmPedido;
+  procedure call_frmPedido(AId: integer = 0);
 
 implementation
 
@@ -92,12 +104,22 @@ implementation
 uses
   fSelProdutoView, fSelClienteView;
 
-procedure call_frmPedido;
+procedure call_frmPedido(AId: integer = 0);
 begin
   try
-    frmPedido := TfrmPedido.Create(nil);
+    try
+      frmPedido := TfrmPedido.Create(nil);
+      with frmPedido do
+      begin
+        FController := TPedidoController.Create(AId);
+        Gravado := False;
+        ModoTela := modoInserir;
 
-    frmPedido.ShowModal;
+        ShowModal;
+      end;
+    except on E:Exception do
+      ShowMessage(E.Message);
+    end;
 
   finally
     FreeAndNil(frmPedido);
@@ -112,16 +134,52 @@ begin
   edtDesc.Text := '';
 end;
 
-procedure TfrmPedido.AtualizarTela;
+procedure TfrmPedido.ProcessarModo;
 begin
-  FController.renderizarGrid(mtbItens);
+  //Controls Produto
+  edtIdProd.Enabled     := ModoTela in [modoLimpar, modoInserir];
+  btnIdProd.Enabled     := ModoTela in [modoLimpar, modoInserir];
+  edtQtde.Enabled       := ModoTela in [modoLimpar, modoInserir, modoEditar];
+  edtUnit.Enabled       := ModoTela in [modoLimpar, modoInserir, modoEditar];
+  btnGravarItem.Enabled := ModoTela in [modoLimpar, modoInserir, modoEditar];
+  btnCancelItem.Enabled := ModoTela in [modoLimpar, modoInserir, modoEditar];
+
+  //Grid
+  grdItens.Enabled      := ModoTela in [modoLimpar, modoInserir];
+
+  //Cabeçalho
+  edtIdCli.Enabled      := ModoTela in [modoLimpar, modoInserir];
+  btnIdCli.Enabled      := ModoTela in [modoLimpar, modoInserir];
+  edtEmis.Enabled       := ModoTela in [modoLimpar, modoInserir];
+
+  btnGravar.Enabled     := ModoTela in [modoLimpar, modoInserir];
+  btnCancel.Enabled     := (FController.Pedido.Cliente.Id <= 0) and (ModoTela in [modoLimpar, modoInserir]);
+end;
+
+procedure TfrmPedido.AtualizarTela;
+var auxModo: TModoTela;
+begin
+  auxModo := ModoTela;
+
+  ModoTela := modoLimpar;
+  ProcessarModo;
 
   edtTotalPed.Text := formatfloat('###,###,###,##0.00', FController.Pedido.Total);
-  edtIdCli.Text    := intToStr(FController.Pedido.Cliente.Id);
+
+  if FController.Pedido.Cliente.Id > 0 then
+    edtIdCli.Text := intToStr(FController.Pedido.Cliente.Id)
+  else
+    edtIdCli.Text := '';
+
   edtNomeCli.Text  := FController.Pedido.Cliente.Nome;
   edtEmis.DateTime := FController.Pedido.Emis;
 
+  FController.renderizarGrid(mtbItens);
+
   LimparEditsProd;
+
+  ModoTela := auxModo;
+  ProcessarModo;
 end;
 
 procedure TfrmPedido.AdicionarItem;
@@ -138,16 +196,56 @@ begin
     if not FController.AdicionarItem(IdProd, Qtde, VlrUnit, msg) then
     begin
       ShowMessage(msg);
-    end;
+    end
+    else
+    begin
+      AtualizarTela;
 
-  finally
+      edtIdProd.SetFocus;
+    end;
+  except
     AtualizarTela;
   end;
 
 end;
 
-procedure TfrmPedido.AtualizarItem;
+procedure TfrmPedido.AlterarItem;
 begin
+  if ModoTela = modoInserir then
+  begin
+    edtIdProd.Text := mtbItensIdProd.AsString;
+    edtDesc.Text   := mtbItensDescricao.AsString;
+    edtQtde.Text   := formatfloat('###,###,###,##0.00', mtbItensQtde.AsFloat);
+    edtUnit.Text   := formatfloat('###,###,###,##0.00', mtbItensVlrUn.AsFloat);
+
+    ModoTela := modoEditar;
+    ProcessarModo;
+    edtQtde.SetFocus;
+  end;
+end;
+
+procedure TfrmPedido.AtualizarItem;
+var
+  Qtde, VlrUnit: double;
+  msg: string;
+begin
+  Qtde := strToFloatDef(edtQtde.Text, 0);
+  VlrUnit := strToFloatDef(edtUnit.Text, 0);
+
+  try
+    if not FController.AtualizarItem(mtbItensNumItem.AsInteger, Qtde, VlrUnit, msg) then
+    begin
+      ShowMessage(msg);
+    end
+    else
+    begin
+      ModoTela := modoInserir;
+      
+      AtualizarTela;
+    end;
+  except
+    AtualizarTela;
+  end;
 
 end;
 
@@ -175,13 +273,32 @@ begin
 end;
 
 procedure TfrmPedido.btnCancelItemClick(Sender: TObject);
+begin  
+  if ModoTela = modoEditar then
+    ModoTela := modoInserir;
+
+  AtualizarTela;
+end;
+
+procedure TfrmPedido.btnGravarClick(Sender: TObject);
+var msg: string;
 begin
-  LimparEditsProd;
+  if not FController.GravarPedido(msg) then
+    ShowMessage(msg)
+  else
+  begin
+    ShowMessage('O pedido foi salvo'); 
+    Gravado := True;
+    Close;
+  end;
 end;
 
 procedure TfrmPedido.btnGravarItemClick(Sender: TObject);
 begin
-  AdicionarItem;
+  if ModoTela = modoEditar then
+    AtualizarItem
+  else
+    AdicionarItem;
 end;
 
 procedure TfrmPedido.btnIdProdClick(Sender: TObject);
@@ -207,12 +324,21 @@ end;
 
 procedure TfrmPedido.edtIdCliExit(Sender: TObject);
 begin
-  if not FController.setCliente(StrToIntDef(edtIdCli.Text, 0)) then
+  if not FController.setCliente(StrToIntDef(edtIdCli.Text, 0)) and (edtIdCli.Text > '') then
   begin
-    //msg erro
+    ShowMessage('ID do cliente inválido!');
+    edtIdCli.Text := '';
+
+    if edtIdCli.CanFocus then
+      edtIdCli.SetFocus;
   end;
 
   edtNomeCli.Text := FController.Pedido.Cliente.Nome;
+
+  if edtNomeCli.Text > '' then
+    if edtQtde.CanFocus then
+      edtQtde.SetFocus;
+
 end;
 
 procedure TfrmPedido.edtIdProdExit(Sender: TObject);
@@ -256,20 +382,20 @@ end;
 procedure TfrmPedido.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
 
-  if not (MessageDlg('Sair sem Salvar ?' , mtConfirmation, [mbOK, mbCancel], 0) = mrOk) then
+  if (not Gravado) and (not (MessageDlg('Sair sem Salvar ?' , mtConfirmation, [mbOK, mbCancel], 0) = mrOk)) then
     Abort;
 
   FreeAndNil(FController);
 end;
 
-procedure TfrmPedido.FormCreate(Sender: TObject);
-begin
-  FController := TPedidoController.Create;
-end;
-
 procedure TfrmPedido.FormShow(Sender: TObject);
 begin
   AtualizarTela;
+
+  if (edtIdCli.Text = '') and edtIdCli.CanFocus then
+    edtIdCli.SetFocus
+  else if edtIdProd.CanFocus then
+    edtIdProd.SetFocus;
 end;
 
 procedure TfrmPedido.grdItensKeyDown(Sender: TObject; var Key: Word;
@@ -279,9 +405,14 @@ begin
   begin
     DeletarItem;
   end;
+
+  if key = VK_RETURN then
+  begin
+    AlterarItem;
+  end;
 end;
 
-procedure TfrmPedido.SpeedButton1Click(Sender: TObject);
+procedure TfrmPedido.btnIdCliClick(Sender: TObject);
 var
   chave: integer;
 begin

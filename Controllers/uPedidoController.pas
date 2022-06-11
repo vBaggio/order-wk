@@ -22,21 +22,44 @@ type TPedidoController = class
 
     function setCliente(AId: integer): boolean;
     function setEmis(AEmis: TDateTime): boolean;
-    procedure renderizarGrid(var AMemTb : TFDMemTable);
+    procedure RenderizarGrid(var AMemTb : TFDMemTable);
 
     function ProcurarProd(AId: integer): string;
 
     function AdicionarItem(AIdProd: integer; AQtde, AVlr: double; var AMsg: string): boolean;
-    function DeletarItem(ASeq: integer; var AMsg: string): boolean;
     function AtualizarItem(ASeq: integer; AQtde, AVlr: double; var AMsg: string): boolean;
+    function DeletarItem(ASeq: integer; var AMsg: string): boolean;
 
-    constructor Create;
+    function GravarPedido(var AMsg: string): boolean;
+
+    constructor Create(AId: integer = 0);
     destructor Destroy; override;
 end;
 
 implementation
 
 { TPedidoController }
+
+constructor TPedidoController.Create(AId: integer = 0);
+begin
+  FPedidoDao := TPedidoDao.Create;
+  FClienteDao := TClienteDao.Create;
+  FProdutoDao := TProdutoDao.Create;
+
+  FPedido := TPedido.Create(AId);
+
+  if (AId > 0) and (not (FPedidoDao.Load(FPedido, AId))) then
+    raise Exception.Create('Erro ao carregar pedido');
+end;
+
+destructor TPedidoController.Destroy;
+begin
+  FreeAndNil(FPedido);
+  FreeAndNil(FClienteDao);
+  FreeAndNil(FPedidoDao);
+  FreeAndNil(FProdutoDao);
+  inherited;
+end;
 
 function TPedidoController.AdicionarItem(AIdProd: integer; AQtde, AVlr: double; var AMsg: string): boolean;
 var
@@ -96,6 +119,23 @@ function TPedidoController.AtualizarItem(ASeq: integer; AQtde, AVlr: double; var
 begin
   AMsg := 'Erro ao atualizar item';
   Result := False;
+
+  if not (AQtde > 0) then
+  begin
+    AMsg := 'Quantidade Inválida.';
+    Exit;
+  end;
+
+  if not (AVlr > 0) then
+  begin
+    AMsg := 'Valor Inválido.';
+    Exit;
+  end;
+
+  Result := FPedido.UpdateItem(ASeq, AQtde, AVlr);
+
+  if Result then
+    AMsg := '';
 end;
 
 function TPedidoController.DeletarItem(ASeq: integer; var AMsg: string): boolean;
@@ -108,35 +148,27 @@ begin
     AMsg := '';
 end;
 
-constructor TPedidoController.Create;
+function TPedidoController.GravarPedido(var AMsg: string): boolean;
 begin
-  FPedidoDao := TPedidoDao.Create;
-  FClienteDao := TClienteDao.Create;
-  FProdutoDao := TProdutoDao.Create;
+  Result := False;
+  AMsg := 'Erro ao gravar pedido';
 
-  FPedido := TPedido.Create;
+  if FPedido.Itens.Count = 0 then
+  begin
+    AMsg := 'Impossível gravar sem itens no pedido';
+    Exit;
+  end;
 
-  FPedido.AddItem(TPedidoItem.Create);
-  FProdutoDao.Load(FPedido.Itens[0].Produto, 23);
-  FPedido.Itens[0].Quantidade := 2.25;
-  FPedido.Itens[0].Unitario := FPedido.Itens[0].Produto.Venda;
+  if not (FPedido.Cliente.Id > 0) then
+    begin
+    AMsg := 'Cliente inválido!';
+    Exit;
+  end;
 
-  FPedido.AddItem(TPedidoItem.Create);
-  FProdutoDao.Load(FPedido.Itens[1].Produto, 24);
-  FPedido.Itens[1].Quantidade := 4;
-  FPedido.Itens[1].Unitario := FPedido.Itens[1].Produto.Venda;
+  Result := FPedidoDao.Save(FPedido);
 
-  FClienteDao.Load(FPedido.Cliente, 22);
-end;
-
-destructor TPedidoController.Destroy;
-begin
-
-  FreeAndNil(FPedido);
-  FreeAndNil(FClienteDao);
-  FreeAndNil(FPedidoDao);
-  FreeAndNil(FProdutoDao);
-  inherited;
+  if Result then
+    AMsg := '';
 end;
 
 function TPedidoController.ProcurarProd(AId: integer): string;
@@ -159,7 +191,7 @@ begin
 
 end;
 
-procedure TPedidoController.renderizarGrid(var AMemTb: TFDMemTable);
+procedure TPedidoController.RenderizarGrid(var AMemTb: TFDMemTable);
 var
   Item: TPedidoItem;
 begin

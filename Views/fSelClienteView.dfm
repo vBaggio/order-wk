@@ -59,7 +59,7 @@ object frmSelectCli: TfrmSelectCli
     ColCount = 3
     FixedCols = 0
     RowCount = 2
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSelect, goFixedRowDefAlign]
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goFixedRowDefAlign]
     TabOrder = 0
     OnDblClick = stgClientesDblClick
     OnKeyPress = stgClientesKeyPress

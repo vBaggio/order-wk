@@ -14,7 +14,7 @@ type TCliente = class
     property Nome: string     read FNome   write FNome;
     property Cidade : string  read FCidade write FCidade;
     property UF: string       read FUF     write FUF;
-    constructor Create;
+    constructor Create(AId: integer = 0);
 
     procedure Reset;
 end;
@@ -23,17 +23,14 @@ implementation
 
 { TCliente }
 
-constructor TCliente.Create;
+constructor TCliente.Create(AId: integer = 0);
 begin
-  inherited;
+  FId := AId;
   Reset;
 end;
 
-
-
 procedure TCliente.Reset;
 begin
-  FId := 0;
   FNome := '';
   FCidade := '';
   FUF := '';

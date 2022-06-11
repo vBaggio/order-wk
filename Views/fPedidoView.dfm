@@ -3,7 +3,7 @@ object frmPedido: TfrmPedido
   Top = 0
   Caption = 'Pedido'
   ClientHeight = 421
-  ClientWidth = 554
+  ClientWidth = 572
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,162 +13,182 @@ object frmPedido: TfrmPedido
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
-  OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object pnlFooter: TPanel
     Left = 0
-    Top = 284
-    Width = 554
-    Height = 137
+    Top = 316
+    Width = 572
+    Height = 105
     Align = alBottom
     TabOrder = 0
-    ExplicitLeft = 8
-    ExplicitTop = 276
-    DesignSize = (
-      554
-      137)
-    object Label3: TLabel
-      Left = 24
-      Top = 24
-      Width = 52
-      Height = 13
-      Caption = 'ID Produto'
-    end
-    object Label4: TLabel
-      Left = 24
-      Top = 80
-      Width = 24
-      Height = 13
-      Caption = 'Qtde'
-    end
-    object Label5: TLabel
-      Left = 104
-      Top = 80
-      Width = 43
-      Height = 13
-      Caption = 'Pre'#231'o Un'
-    end
-    object Label6: TLabel
-      Left = 188
-      Top = 80
-      Width = 49
-      Height = 13
-      Caption = 'Total Item'
-    end
-    object Label2: TLabel
-      Left = 112
-      Top = 24
-      Width = 46
-      Height = 13
-      Caption = 'Descri'#231#227'o'
-    end
-    object btnIdProd: TSpeedButton
-      Left = 83
-      Top = 42
-      Width = 24
-      Height = 24
-      OnClick = btnIdProdClick
-    end
-    object btnGravar: TButton
-      Left = 429
-      Top = 82
-      Width = 107
-      Height = 40
-      Anchors = [akRight, akBottom]
-      Caption = 'Gravar Pedido'
+    object pnlControls: TPanel
+      Left = 1
+      Top = 1
+      Width = 440
+      Height = 103
+      Align = alLeft
+      BevelOuter = bvNone
       TabOrder = 0
+      object btnIdProd: TSpeedButton
+        Left = 76
+        Top = 25
+        Width = 24
+        Height = 24
+        OnClick = btnIdProdClick
+      end
+      object Label2: TLabel
+        Left = 106
+        Top = 11
+        Width = 46
+        Height = 13
+        Caption = 'Descri'#231#227'o'
+      end
+      object Label3: TLabel
+        Left = 17
+        Top = 11
+        Width = 52
+        Height = 13
+        Caption = 'ID Produto'
+      end
+      object Label4: TLabel
+        Left = 17
+        Top = 52
+        Width = 24
+        Height = 13
+        Caption = 'Qtde'
+      end
+      object Label5: TLabel
+        Left = 99
+        Top = 52
+        Width = 43
+        Height = 13
+        Caption = 'Pre'#231'o Un'
+      end
+      object Label6: TLabel
+        Left = 185
+        Top = 52
+        Width = 49
+        Height = 13
+        Caption = 'Total Item'
+      end
+      object btnCancelItem: TButton
+        Left = 334
+        Top = 66
+        Width = 58
+        Height = 25
+        Caption = 'Cancelar'
+        TabOrder = 4
+        TabStop = False
+        OnClick = btnCancelItemClick
+      end
+      object btnGravarItem: TButton
+        Left = 275
+        Top = 66
+        Width = 58
+        Height = 25
+        Caption = 'Gravar'
+        TabOrder = 3
+        OnClick = btnGravarItemClick
+      end
+      object edtDesc: TEdit
+        Left = 106
+        Top = 27
+        Width = 286
+        Height = 21
+        TabStop = False
+        Color = clInfoBk
+        ReadOnly = True
+        TabOrder = 5
+      end
+      object edtIdProd: TEdit
+        Left = 17
+        Top = 27
+        Width = 59
+        Height = 21
+        TabOrder = 0
+        OnExit = edtIdProdExit
+        OnKeyPress = edtIdProdKeyPress
+      end
+      object edtQtde: TMaskEdit
+        Left = 17
+        Top = 68
+        Width = 76
+        Height = 21
+        TabOrder = 1
+        Text = '0,00'
+        OnChange = edtQtdeChange
+        OnKeyPress = edtUnitKeyPress
+      end
+      object edtTotalItem: TMaskEdit
+        Left = 185
+        Top = 68
+        Width = 86
+        Height = 21
+        TabStop = False
+        Color = clInfoBk
+        ReadOnly = True
+        TabOrder = 6
+        Text = '0,00'
+      end
+      object edtUnit: TMaskEdit
+        Left = 99
+        Top = 68
+        Width = 80
+        Height = 21
+        TabOrder = 2
+        Text = '0,00'
+        OnChange = edtUnitChange
+        OnKeyPress = edtUnitKeyPress
+      end
     end
-    object btnGravarItem: TButton
-      Left = 280
-      Top = 97
-      Width = 58
-      Height = 25
-      Caption = 'Gravar'
-      TabOrder = 4
-      OnClick = btnGravarItemClick
-    end
-    object btnCancel: TButton
-      Left = 429
-      Top = 26
-      Width = 107
-      Height = 40
-      Anchors = [akRight, akBottom]
-      Caption = 'Cancelar Pedido'
-      TabOrder = 5
-      OnClick = btnCancelClick
-    end
-    object edtTotalItem: TMaskEdit
-      Left = 188
-      Top = 99
-      Width = 86
-      Height = 21
-      TabStop = False
-      Color = clInfoBk
-      ReadOnly = True
-      TabOrder = 6
-      Text = '0,00'
-    end
-    object edtUnit: TMaskEdit
-      Left = 104
-      Top = 99
-      Width = 80
-      Height = 21
-      TabOrder = 3
-      Text = '0,00'
-      OnChange = edtUnitChange
-      OnKeyPress = edtUnitKeyPress
-    end
-    object edtQtde: TMaskEdit
-      Left = 24
-      Top = 99
-      Width = 76
-      Height = 21
-      TabOrder = 2
-      Text = '0,00'
-      OnChange = edtQtdeChange
-      OnKeyPress = edtUnitKeyPress
-    end
-    object edtIdProd: TEdit
-      Left = 24
-      Top = 43
-      Width = 59
-      Height = 21
+    object pnlButtons: TPanel
+      Left = 447
+      Top = 1
+      Width = 124
+      Height = 103
+      Align = alRight
+      BevelOuter = bvNone
       TabOrder = 1
-      OnExit = edtIdProdExit
-      OnKeyPress = edtIdProdKeyPress
-    end
-    object edtDesc: TEdit
-      Left = 112
-      Top = 43
-      Width = 286
-      Height = 21
-      TabStop = False
-      Color = clInfoBk
-      ReadOnly = True
-      TabOrder = 7
-    end
-    object btnCancelItem: TButton
-      Left = 340
-      Top = 97
-      Width = 58
-      Height = 25
-      Caption = 'Cancelar'
-      TabOrder = 8
-      OnClick = btnCancelItemClick
+      DesignSize = (
+        124
+        103)
+      object btnGravar: TButton
+        Left = 0
+        Top = 54
+        Width = 107
+        Height = 40
+        Anchors = [akRight, akBottom]
+        Caption = 'Gravar Pedido'
+        TabOrder = 0
+        TabStop = False
+        OnClick = btnGravarClick
+      end
+      object btnCancel: TButton
+        Left = 0
+        Top = 8
+        Width = 107
+        Height = 40
+        Anchors = [akRight, akBottom]
+        Caption = 'Cancelar Pedido'
+        Enabled = False
+        TabOrder = 1
+        TabStop = False
+        OnClick = btnCancelClick
+      end
     end
   end
   object pnlHeader: TPanel
     Left = 0
     Top = 0
-    Width = 554
+    Width = 572
     Height = 65
     Align = alTop
     BevelOuter = bvLowered
     TabOrder = 1
     DesignSize = (
-      554
+      572
       65)
     object Label7: TLabel
       Left = 113
@@ -177,12 +197,12 @@ object frmPedido: TfrmPedido
       Height = 13
       Caption = 'Cliente'
     end
-    object SpeedButton1: TSpeedButton
+    object btnIdCli: TSpeedButton
       Left = 83
       Top = 31
       Width = 24
       Height = 24
-      OnClick = SpeedButton1Click
+      OnClick = btnIdCliClick
     end
     object Label1: TLabel
       Left = 11
@@ -192,7 +212,7 @@ object frmPedido: TfrmPedido
       Caption = 'ID Cliente'
     end
     object Label8: TLabel
-      Left = 312
+      Left = 330
       Top = 13
       Width = 64
       Height = 13
@@ -201,7 +221,7 @@ object frmPedido: TfrmPedido
       ExplicitLeft = 370
     end
     object Label9: TLabel
-      Left = 429
+      Left = 447
       Top = 13
       Width = 24
       Height = 13
@@ -212,7 +232,7 @@ object frmPedido: TfrmPedido
     object edtNomeCli: TEdit
       Left = 114
       Top = 32
-      Width = 192
+      Width = 210
       Height = 21
       TabStop = False
       Anchors = [akLeft, akTop, akRight]
@@ -226,12 +246,12 @@ object frmPedido: TfrmPedido
       Top = 32
       Width = 72
       Height = 21
-      ReadOnly = True
       TabOrder = 1
       OnExit = edtIdCliExit
+      OnKeyPress = edtIdProdKeyPress
     end
     object edtEmis: TDateTimePicker
-      Left = 313
+      Left = 331
       Top = 32
       Width = 106
       Height = 21
@@ -242,7 +262,7 @@ object frmPedido: TfrmPedido
       OnExit = edtEmisExit
     end
     object edtTotalPed: TMaskEdit
-      Left = 430
+      Left = 448
       Top = 32
       Width = 106
       Height = 21
@@ -256,8 +276,8 @@ object frmPedido: TfrmPedido
   object grdItens: TDBGrid
     Left = 0
     Top = 65
-    Width = 554
-    Height = 219
+    Width = 572
+    Height = 251
     Align = alClient
     DataSource = dsItens
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
