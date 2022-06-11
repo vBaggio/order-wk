@@ -31,6 +31,7 @@ type TPedidoController = class
     function DeletarItem(ASeq: integer; var AMsg: string): boolean;
 
     function GravarPedido(var AMsg: string): boolean;
+    function DeletarPedido(var AMsg: string): boolean;
 
     constructor Create(AId: integer = 0);
     destructor Destroy; override;
@@ -143,6 +144,20 @@ begin
   AMsg := 'Erro deletar item';
 
   Result := FPedido.RemoverItem(ASeq);
+
+  if Result then
+    AMsg := '';
+end;
+
+function TPedidoController.DeletarPedido(var AMsg: string): boolean;
+begin
+  Result := False;
+  AMsg := 'Erro ao deletar pedido';
+
+  if not (FPedido.Id > 0) then
+    Exit;
+
+  Result := FPedidoDao.Delete(FPedido.Id);
 
   if Result then
     AMsg := '';

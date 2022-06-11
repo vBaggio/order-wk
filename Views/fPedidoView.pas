@@ -254,22 +254,32 @@ var msg: string;
 begin
     if not mtbItensNumItem.IsNull then
 
-    if MessageDlg('Deseja Excluir o item ' + mtbItensNumItem.AsString + ' ?' , mtConfirmation, [mbOK, mbCancel], 0) = mrOk then
-    begin
-
-      try
-        if not FController.DeletarItem(mtbItensNumItem.AsInteger, msg) then
-          ShowMessage(msg);
-      finally
-        AtualizarTela;
+      if MessageDlg('Deseja excluir o Item ' + mtbItensNumItem.AsString + ' ?' , mtConfirmation, [mbOK, mbCancel], 0) = mrOk then
+      begin
+        try
+          if not FController.DeletarItem(mtbItensNumItem.AsInteger, msg) then
+            ShowMessage(msg);
+        finally
+          AtualizarTela;
+        end;
       end;
-
-    end;
 end;
 
 procedure TfrmPedido.btnCancelClick(Sender: TObject);
+var
+  msg: string;
 begin
-  Close;
+  if MessageDlg('Deseja realmente cancelar o Pedido ?' , mtConfirmation, [mbOK, mbCancel], 0) = mrOk then
+  begin
+    if (FController.Pedido.Id > 0) and (not FController.DeletarPedido(msg)) then
+    begin
+      ShowMessage(msg);
+      Exit;
+    end;
+
+    Gravado := True;
+    Close;
+  end;
 end;
 
 procedure TfrmPedido.btnCancelItemClick(Sender: TObject);
@@ -287,7 +297,7 @@ begin
     ShowMessage(msg)
   else
   begin
-    ShowMessage('O pedido foi salvo'); 
+    ShowMessage('O Pedido foi salvo');
     Gravado := True;
     Close;
   end;
