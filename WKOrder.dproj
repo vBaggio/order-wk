@@ -98,9 +98,32 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="Views\fMain_view.pas">
-            <Form>Form1</Form>
+        <DCCReference Include="Views\fMainView.pas">
+            <Form>frmMain</Form>
         </DCCReference>
+        <DCCReference Include="DAO\uConnection.pas"/>
+        <DCCReference Include="Views\fPedidoView.pas">
+            <Form>frmPedido</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Models\uCliente.pas"/>
+        <DCCReference Include="Models\uProduto.pas"/>
+        <DCCReference Include="Controllers\uSelClienteController.pas"/>
+        <DCCReference Include="Models\uPedido.pas"/>
+        <DCCReference Include="Models\uPedidoItem.pas"/>
+        <DCCReference Include="DAO\uProdutoDAO.pas"/>
+        <DCCReference Include="Views\fSelProdutoView.pas">
+            <Form>frmSelectProd</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Views\fSelClienteView.pas">
+            <Form>frmSelectCli</Form>
+        </DCCReference>
+        <DCCReference Include="Controllers\uSelProdutoController.pas"/>
+        <DCCReference Include="DAO\uClienteDao.pas"/>
+        <DCCReference Include="DAO\uBaseDAO.pas"/>
+        <DCCReference Include="Controllers\uPedidoController.pas"/>
+        <DCCReference Include="DAO\uPedidoDAO.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -904,6 +927,7 @@
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">False</Platform>
             </Platforms>
+            <ModelSupport>False</ModelSupport>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>
