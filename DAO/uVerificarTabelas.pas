@@ -33,7 +33,10 @@ begin
     if List.Count < 4 then
     begin
       if not (MessageDlg('Criar as tabelas ?' , mtConfirmation, [mbOK, mbCancel], 0) = mrOk) then
+      begin
         Application.Terminate;
+        Exit;
+      end;
     end;
 
     try
@@ -156,9 +159,6 @@ begin
     except
       Conn.Rollback;
     end;
-
-
-
 
   finally
     List.Free;

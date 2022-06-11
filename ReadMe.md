@@ -5,5 +5,6 @@ Projeto desenvolvido durante a participação do processo seletivo da empresa [W
 - Delphi 10.4 Community Edition e seus componentes nativos;
 - MySQL Server Community Edition.
 
-## Atenção
-Este projeto não está sendo e nem será comercializado.
+## Instalação
+Basta preencher as informações da conexão com o banco de dados no arquivo **WKOder.ini**, é necessário informar um schema vazio.
+Dependendo da versão do mysql, pode ocorrer incompatibilidade com a dll na past bin, nesse caso basta substituir.
